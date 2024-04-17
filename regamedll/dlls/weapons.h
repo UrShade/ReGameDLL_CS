@@ -35,16 +35,12 @@ const float MAX_DIST_RELOAD_SOUND = 512.0f;
 
 #define MAX_WEAPONS                 32
 
-#define ITEM_FLAG_SELECTONEMPTY     		BIT(0)
-#define ITEM_FLAG_NOAUTORELOAD      		BIT(1)
-#define ITEM_FLAG_NOAUTOSWITCHEMPTY 		BIT(2)
-#define ITEM_FLAG_LIMITINWORLD      		BIT(3)
-#define ITEM_FLAG_EXHAUSTIBLE       		BIT(4) // A player can totally exhaust their ammo supply and lose this weapon
-#define ITEM_FLAG_NOFIREUNDERWATER  		BIT(5)
-#define ITEM_FLAG_EXHAUST_SECONDARYAMMO		BIT(6) // A player will exhaust weapon's secondary ammo supply if dropped (ITEM_FLAG_EXHAUSTIBLE does both)
-
-// if someone has an idea for another flag pack it here, so client prediction will not be screwed (or something) if PLAY_GAMEDLL is defined
-#define ITEM_FLAG_CUSTOM	(ITEM_FLAG_NOFIREUNDERWATER | ITEM_FLAG_EXHAUST_SECONDARYAMMO)
+#define ITEM_FLAG_SELECTONEMPTY     BIT(0)
+#define ITEM_FLAG_NOAUTORELOAD      BIT(1)
+#define ITEM_FLAG_NOAUTOSWITCHEMPTY BIT(2)
+#define ITEM_FLAG_LIMITINWORLD      BIT(3)
+#define ITEM_FLAG_EXHAUSTIBLE       BIT(4) // A player can totally exhaust their ammo supply and lose this weapon
+#define ITEM_FLAG_NOFIREUNDERWATER  BIT(5)
 
 #define WEAPON_IS_ONTARGET          0x40
 
@@ -477,9 +473,6 @@ public:
 public:
 	BOOL IsEmpty();
 	int GiveAmmo(int iCount, char *szName, int iMax, int *pIndex = nullptr);
-	int GetAmmoIndex(const char *psz) const;
-	bool GiveAmmoToPlayer(CBasePlayer *pPlayer, CBasePlayerWeapon *pWeapon,
-		int iCurrentAmmo, const char *pszAmmo, int iMaxAmmo, CBasePlayerItem **pGivenItem = NULL);
 
 	void EXPORT Kill();
 	void EXPORT BombThink();
@@ -592,7 +585,7 @@ const float MP5N_DAMAGE        = 26.0f;
 const float MP5N_RANGE_MODIFER = 0.84f;
 const float MP5N_RELOAD_TIME   = 2.63f;
 #ifdef REGAMEDLL_FIXES
-const float MP5N_ACCURACY_DIVISOR = 220.1f;
+const double MP5N_ACCURACY_DIVISOR = 220.1;
 #else
 const double MP5N_ACCURACY_DIVISOR = 220.1;
 #endif
@@ -645,7 +638,7 @@ const float SG552_DAMAGE         = 33.0f;
 const float SG552_RANGE_MODIFER  = 0.955f;
 const float SG552_RELOAD_TIME    = 3.0f;
 #ifdef REGAMEDLL_FIXES
-const float SG552_ACCURACY_DIVISOR = 220.0f;
+const int SG552_ACCURACY_DIVISOR = 220;
 #else
 const int SG552_ACCURACY_DIVISOR = 220;
 #endif
@@ -698,7 +691,7 @@ const float AK47_DAMAGE        = 36.0f;
 const float AK47_RANGE_MODIFER = 0.98f;
 const float AK47_RELOAD_TIME   = 2.45f;
 #ifdef REGAMEDLL_FIXES
-const float AK47_ACCURACY_DIVISOR = 200.0f;
+const int AK47_ACCURACY_DIVISOR = 200;
 #else
 const int AK47_ACCURACY_DIVISOR = 200;
 #endif
@@ -751,7 +744,7 @@ const float AUG_DAMAGE        = 32.0f;
 const float AUG_RANGE_MODIFER = 0.96f;
 const float AUG_RELOAD_TIME   = 3.3f;
 #ifdef REGAMEDLL_FIXES
-const float AUG_ACCURACY_DIVISOR = 215.0f;
+const int AUG_ACCURACY_DIVISOR = 215;
 #else
 const int AUG_ACCURACY_DIVISOR = 215;
 #endif
@@ -1272,7 +1265,7 @@ inline float CKnife::KnifeSwingDamage(bool fast) const	{ return fast ? m_flSwing
 inline float CKnife::KnifeStabDistance() const			{ return m_flStabDistance; }
 inline float CKnife::KnifeSwingDistance() const			{ return m_flSwingDistance; }
 inline float CKnife::KnifeBackStabMultiplier() const	{ return m_flBackStabMultiplier; }
-#else
+#else 
 inline float CKnife::KnifeStabDamage() const			{ return KNIFE_STAB_DAMAGE; }
 inline float CKnife::KnifeSwingDamage(bool fast) const	{ return fast ? KNIFE_SWING_DAMAGE_FAST : KNIFE_SWING_DAMAGE; }
 inline float CKnife::KnifeStabDistance() const			{ return KNIFE_STAB_DISTANCE; }
@@ -1285,7 +1278,7 @@ const float M249_DAMAGE        = 32.0f;
 const float M249_RANGE_MODIFER = 0.97f;
 const float M249_RELOAD_TIME   = 4.7f;
 #ifdef REGAMEDLL_FIXES
-const float M249_ACCURACY_DIVISOR = 175.0f;
+const int M249_ACCURACY_DIVISOR = 175;
 #else
 const int M249_ACCURACY_DIVISOR = 175;
 #endif
@@ -1385,7 +1378,7 @@ const float M4A1_RANGE_MODIFER     = 0.97f;
 const float M4A1_RANGE_MODIFER_SIL = 0.95f;
 const float M4A1_RELOAD_TIME       = 3.05f;
 #ifdef REGAMEDLL_FIXES
-const float M4A1_ACCURACY_DIVISOR = 220.0f;
+const int M4A1_ACCURACY_DIVISOR = 220;
 #else
 const int M4A1_ACCURACY_DIVISOR = 220;
 #endif
@@ -1450,7 +1443,7 @@ const float MAC10_DAMAGE        = 29.0f;
 const float MAC10_RANGE_MODIFER = 0.82f;
 const float MAC10_RELOAD_TIME   = 3.15f;
 #ifdef REGAMEDLL_FIXES
-const float MAC10_ACCURACY_DIVISOR = 200.0f;
+const int MAC10_ACCURACY_DIVISOR = 200;
 #else
 const int MAC10_ACCURACY_DIVISOR = 200;
 #endif
@@ -1567,7 +1560,7 @@ const float P90_DAMAGE        = 21.0f;
 const float P90_RANGE_MODIFER = 0.885f;
 const float P90_RELOAD_TIME   = 3.4f;
 #ifdef REGAMEDLL_FIXES
-const float P90_ACCURACY_DIVISOR = 175.0f;
+const int P90_ACCURACY_DIVISOR = 175;
 #else
 const int P90_ACCURACY_DIVISOR = 175;
 #endif
@@ -1714,7 +1707,7 @@ const float TMP_DAMAGE        = 20.0f;
 const float TMP_RANGE_MODIFER = 0.85f;
 const float TMP_RELOAD_TIME   = 2.12f;
 #ifdef REGAMEDLL_FIXES
-const float TMP_ACCURACY_DIVISOR = 200.0f;
+const int TMP_ACCURACY_DIVISOR = 200;
 #else
 const int TMP_ACCURACY_DIVISOR = 200;
 #endif
@@ -1935,7 +1928,7 @@ const float UMP45_DAMAGE        = 30.0f;
 const float UMP45_RANGE_MODIFER = 0.82f;
 const float UMP45_RELOAD_TIME   = 3.5f;
 #ifdef REGAMEDLL_FIXES
-const float UMP45_ACCURACY_DIVISOR = 210.0f;
+const int UMP45_ACCURACY_DIVISOR = 210;
 #else
 const int UMP45_ACCURACY_DIVISOR = 210;
 #endif
@@ -2033,7 +2026,7 @@ const float GALIL_DAMAGE        = 30.0f;
 const float GALIL_RANGE_MODIFER = 0.98f;
 const float GALIL_RELOAD_TIME   = 2.45f;
 #ifdef REGAMEDLL_FIXES
-const float GALIL_ACCURACY_DIVISOR = 200.0f;
+const int GALIL_ACCURACY_DIVISOR = 200;
 #else
 const int GALIL_ACCURACY_DIVISOR = 200;
 #endif
@@ -2088,7 +2081,7 @@ const float FAMAS_DAMAGE        = 30.0f;
 const float FAMAS_DAMAGE_BURST  = 34.0f;
 const float FAMAS_RANGE_MODIFER = 0.96f;
 #ifdef REGAMEDLL_FIXES
-const float FAMAS_ACCURACY_DIVISOR = 215.0f;
+const int FAMAS_ACCURACY_DIVISOR = 215;
 #else
 const int FAMAS_ACCURACY_DIVISOR = 215;
 #endif
